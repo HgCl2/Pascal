@@ -83,6 +83,39 @@ begin
 	writeln('Dictionary don''t contain this word.');
 end;
 
+procedure CheckNative(nativeWord:string);
+var
+	row:string;
+	rowData:translation;
+begin
+	{$I-}
+	assign(f, filename);
+	reset(f);
+
+	if IOResult <> 0 then
+	begin
+		writeln('Couldn''t open file');
+		halt(1)
+	end;
+
+	while not SeekEof(f) do
+	begin
+		read(f, row);
+		rowData := SplitWords(row);
+		if CompareStr(nativeWord, rowData[3]) = 0 then
+		begin
+			write('Found: ');
+			writeln(rowData[2]);
+			close(f);
+			exit
+		end;
+		readln(f)
+	end;
+	close(f);
+	writeln('Dictionary don''t contain this word.');
+
+end;
+
 var
 	command:string;
 begin
@@ -107,6 +140,15 @@ begin
 			halt(1);
 		end;
 		CheckWord(ParamStr(2), ParamStr(3));
+	end
+	else if command = 'check-native' then
+	begin
+		if ParamCount <> 2 then
+		begin
+			writeln('Usage:');
+			writeln('./learnlang check-native [word]');
+		end;
+		CheckNative(ParamStr(2));
 	end
 	
 end.
