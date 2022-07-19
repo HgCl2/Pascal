@@ -112,7 +112,7 @@ end;
 
 procedure Test(lang:string);
 var
-	len, i, j:integer;
+	len, i, j, rightAnswer:integer;
 	testLine, inputStr:string;
 	lineData:translation;
 begin
@@ -127,6 +127,7 @@ begin
 	
 	randomize;
 	len := CountWords;
+	rightAnswer := 0;
 
 	for i := 1 to len  do
 	begin
@@ -147,6 +148,7 @@ begin
 		if inputStr = lineData[3] then
 		begin
 			writeln('Right');
+			rightAnswer := rightAnswer + 1
 		end
 		else
 		begin
@@ -154,6 +156,8 @@ begin
 		end
 
 	end;
+
+	writeln(rightAnswer, ' right from ', len);
 end;
 
 procedure CheckNative(nativeWord:string);
