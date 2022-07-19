@@ -33,28 +33,7 @@ begin
 	CountWords := counter
 end;
 
-procedure Test(lang:string);
-var
-	len:integer;
-begin
-	{$I-}
-	assign(f, filename);
-	reset(f);
-	
-	if IOResult <> 0 then
-	begin
-		writeln('Couldn''t open file');
-		halt(1)
-	end;
-	
-	randomize;
-	len := CountWords;
-	writeln(len);
-	{while not SeekEof(f) do
-	begin
-		
-	end;}
-end;
+
 function SplitWords(message:string):translation;
 var
 	res:translation;
@@ -129,6 +108,52 @@ begin
 	end;
 	close(f);
 	writeln('Dictionary don''t contain this word.');
+end;
+
+procedure Test(lang:string);
+var
+	len, i, j:integer;
+	testLine, inputStr:string;
+	lineData:translation;
+begin
+	{$I-}
+	assign(f, filename);
+	
+	if IOResult <> 0 then
+	begin
+		writeln('Couldn''t open file');
+		halt(1)
+	end;
+	
+	randomize;
+	len := CountWords;
+
+	for i := 1 to len  do
+	begin
+		reset(f);
+		for j := 1 to random(len) do
+		begin
+			readln(f);
+		end;
+
+		read(f, testLine);
+		lineData := SplitWords(testLine);
+
+		if lineData[1] = lang then
+		begin
+			write(lineData[2], ' ');
+			readln(inputStr);
+		end;
+		if inputStr = lineData[3] then
+		begin
+			writeln('Right');
+		end
+		else
+		begin
+			writeln('Wrong! ', lineData[3]);
+		end
+
+	end;
 end;
 
 procedure CheckNative(nativeWord:string);
