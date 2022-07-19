@@ -6,7 +6,55 @@ var
 	f:text;
 type
 		translation = array [1..3] of string;
+
+function CountWords:integer;
+var
+	counter:integer;
+	s:string;
+begin
+	{$I-}
+	assign(f, filename);
+	reset(f);
+	
+	if IOResult <> 0 then
+	begin
+		writeln('Couldn''t open file');
+		halt(1)
+	end;
+
+	counter := 0;
+	while not SeekEof(f) do
+	begin
+		read(f, s);
+		readln(f);
+		counter := counter + 1;
+	end;
+
+	CountWords := counter
+end;
+
+procedure Test(lang:string);
+var
+	len:integer;
+begin
+	{$I-}
+	assign(f, filename);
+	reset(f);
+	
+	if IOResult <> 0 then
+	begin
+		writeln('Couldn''t open file');
+		halt(1)
+	end;
+	
+	randomize;
+	len := CountWords;
+	writeln(len);
+	{while not SeekEof(f) do
+	begin
 		
+	end;}
+end;
 function SplitWords(message:string):translation;
 var
 	res:translation;
@@ -149,6 +197,15 @@ begin
 			writeln('./learnlang check-native [word]');
 		end;
 		CheckNative(ParamStr(2));
+	end
+	else if command = 'test' then
+	begin
+		if ParamCount <> 2 then
+		begin
+			writeln('Usage:');
+			writeln('./learnlang test [lang]');
+		end;
+		Test(ParamStr(2))
 	end
 	
 end.
